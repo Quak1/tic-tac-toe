@@ -1,18 +1,21 @@
 import { useState } from "react";
 
 import Square from "./Square";
-import { Player } from "../utils/types";
+import { Player, Board as BoardType } from "../utils/types";
+import { checkWinner } from "../utils/game";
 import "./Board.css";
 
 const Board = () => {
-  const [gameState, setGameState] = useState<Player[]>(new Array(9).fill(""));
+  const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));
   const [player, setPlayer] = useState<Player>("x");
 
   const clickSquare = (index: number) => {
     const newGameState = [...gameState];
     newGameState[index] = player;
     setGameState(newGameState);
-    setPlayer(player === "x" ? "o" : "x");
+
+    if (checkWinner(newGameState)) console.log("Winner: ", player);
+    else setPlayer(player === "x" ? "o" : "x");
   };
 
   let squares = [];
@@ -21,7 +24,6 @@ const Board = () => {
       <Square
         key={i}
         index={i}
-        player={player}
         gameState={gameState}
         clickSquare={clickSquare}
       />
