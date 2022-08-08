@@ -1,0 +1,18 @@
+.board {
+  display: grid;
+  max-width: 500px;
+  aspect-ratio: 1 / 1;
+  gap: 5px;
+  grid-template-columns: repeat(3, 1fr);
+
+  background-color: PaleTurquoise;
+}
+
+.square {
+  background-color: PapayaWhip;
+}
+
+.square:hover {
+  filter: brightness(90%);
+  cursor: pointer;
+}
