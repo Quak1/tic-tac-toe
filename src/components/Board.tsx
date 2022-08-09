@@ -8,14 +8,17 @@ import "./Board.css";
 const Board = () => {
   const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));
   const [player, setPlayer] = useState<Player>("x");
+  const [gameFinished, setGameFinished] = useState<boolean>(false);
 
   const clickSquare = (index: number) => {
     const newGameState = [...gameState];
     newGameState[index] = player;
     setGameState(newGameState);
 
-    if (checkWinner(newGameState)) console.log("Winner: ", player);
-    else setPlayer(player === "x" ? "o" : "x");
+    if (checkWinner(newGameState)) {
+      console.log("Winner: ", player);
+      setGameFinished(true);
+    } else setPlayer(player === "x" ? "o" : "x");
   };
 
   let squares = [];
@@ -26,6 +29,7 @@ const Board = () => {
         index={i}
         gameState={gameState}
         clickSquare={clickSquare}
+        gameFinished={gameFinished}
       />
     );
   }

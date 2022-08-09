@@ -1,15 +1,26 @@
 .board {
   display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(3, minmax(10px, 1fr));
+  grid-template-rows: repeat(3, minmax(10px, 1fr));
+
   max-width: 500px;
   aspect-ratio: 1 / 1;
-  gap: 5px;
-  grid-template-columns: repeat(3, 1fr);
 
   background-color: PaleTurquoise;
 }
 
 .square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   background-color: PapayaWhip;
+}
+
+.square img {
+  height: 90%;
+  width: 90%;
 }
 
 .square:hover {
