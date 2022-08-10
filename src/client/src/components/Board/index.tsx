@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import Square from "./Square";
-import { Player, Board as BoardType } from "../utils/types";
-import { checkWinner } from "../utils/game";
+import { Player, Board as BoardType } from "../../utils/types";
+import { checkWinner } from "../../utils/game";
 import "./Board.css";
 
 const Board = () => {

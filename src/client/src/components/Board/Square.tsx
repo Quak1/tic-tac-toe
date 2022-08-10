@@ -1,6 +1,6 @@
-import Cross from "../icons/cross.svg";
-import Circle from "../icons/circle.svg";
-import { Board } from "../utils/types";
+import Cross from "../../icons/cross.svg";
+import Circle from "../../icons/circle.svg";
+import { Board } from "../../utils/types";
 
 interface Props {
   index: number;
