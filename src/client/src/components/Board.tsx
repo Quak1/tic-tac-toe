@@ -21,6 +21,12 @@ const Board = () => {
     } else setPlayer(player === "x" ? "o" : "x");
   };
 
+  const resetBoard = () => {
+    setGameState(new Array(9).fill(""));
+    setGameFinished(false);
+    setPlayer("x");
+  };
+
   let squares = [];
   for (let i = 0; i < 9; i++) {
     squares.push(
@@ -34,7 +40,12 @@ const Board = () => {
     );
   }
 
-  return <div className="board">{squares}</div>;
+  return (
+    <div className="board">
+      {squares}
+      <button onClick={resetBoard}>Reset game</button>
+    </div>
+  );
 };
 
 export default Board;

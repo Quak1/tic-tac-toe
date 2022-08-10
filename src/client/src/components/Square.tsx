@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Cross from "../icons/cross.svg";
 import Circle from "../icons/circle.svg";
 import { Board } from "../utils/types";
@@ -12,10 +10,9 @@ interface Props {
 }
 
 const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
-  const [enabled, setEnabled] = useState(true);
+  const enabled: boolean = !gameState[index];
 
   const handleClick = () => {
-    setEnabled(false);
     clickSquare(index);
   };
 
