@@ -13,7 +13,6 @@ const styles = {
     justifyItems: "center",
     maxWidth: 500,
     height: 40,
-    backgroundColor: "gray",
   },
   iconsContainer: {
     display: "flex",

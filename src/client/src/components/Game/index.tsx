@@ -31,11 +31,9 @@ const Game = () => {
     const winnerSlots = checkWinner(newGameState);
     if (winnerSlots) {
       winner = activePlayer;
-    }
-    if (isFullBoard(newGameState)) {
+    } else if (isFullBoard(newGameState)) {
       winner = "tie";
-    }
-    if (!winner) {
+    } else {
       setActivePlayer(activePlayer === "x" ? "o" : "x");
       return;
     }
