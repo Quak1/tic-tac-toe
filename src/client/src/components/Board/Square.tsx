@@ -2,9 +2,9 @@ import { Box } from "@mui/material";
 
 import Circle from "../Icons/Circle";
 import Cross from "../Icons/Cross";
-import { Board } from "../../utils/types";
+import { Board, GameFinishedType } from "../../utils/types";
 
-import { borderRadius } from "../../utils/theme";
+import { borderRadius, darkTheme } from "../../utils/theme";
 
 const styles = {
   display: "flex",
@@ -14,7 +14,7 @@ const styles = {
   backgroundColor: "background.paper",
   boxShadow: "0 5px rgba(0, 0, 0, 0.2)",
   "&:hover": {
-    filter: "brightness(90%)",
+    filter: "brightness(130%)",
     cursor: "pointer",
   },
   "& svg": {
@@ -23,11 +23,25 @@ const styles = {
   },
 };
 
+const getInvertedStyle = (gameState: Board, index: number) => {
+  return {
+    backgroundColor:
+      gameState[index] === "x"
+        ? darkTheme.palette.colors.cross
+        : darkTheme.palette.colors.circle,
+    "& svg": {
+      fill: darkTheme.palette.background.default,
+      height: "65%",
+      width: "65%",
+    },
+  };
+};
+
 interface Props {
   index: number;
   gameState: Board;
   clickSquare: (index: number) => void;
-  gameFinished: boolean;
+  gameFinished: GameFinishedType;
 }
 
 const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
@@ -45,8 +59,13 @@ const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
   }
   const onClick = enabled && !gameFinished ? handleClick : undefined;
 
+  const winnerStyles =
+    gameFinished && gameFinished.includes(index)
+      ? getInvertedStyle(gameState, index)
+      : undefined;
+
   return (
-    <Box onClick={onClick} sx={styles}>
+    <Box onClick={onClick} sx={{ ...styles, ...winnerStyles }}>
       {content}
     </Box>
   );

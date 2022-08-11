@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 
 import { Player } from "../../utils/types";
-import { borderRadius, gameGrid } from "../../utils/theme";
+import { borderRadius } from "../../utils/theme";
 
 interface Props {
   score: number;

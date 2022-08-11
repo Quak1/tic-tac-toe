@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-import { Board as BoardType, Player } from "../../utils/types";
+import {
+  Board as BoardType,
+  Player,
+  GameFinishedType,
+} from "../../utils/types";
 import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
 import Header from "./Header";
@@ -9,12 +13,12 @@ import Footer from "./Footer";
 const Game = () => {
   const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));
   const [activePlayer, setActivePlayer] = useState<Player>("x");
-  const [gameFinished, setGameFinished] = useState<boolean>(false);
+  const [gameFinished, setGameFinished] = useState<GameFinishedType>();
   const [score, setScore] = useState({ x: 0, tie: 0, o: 0 });
 
   const resetBoard = () => {
     setGameState(new Array(9).fill(""));
-    setGameFinished(false);
+    setGameFinished(undefined);
     setActivePlayer("x");
   };
 
@@ -24,7 +28,8 @@ const Game = () => {
     setGameState(newGameState);
 
     let winner: Player | "tie" | undefined;
-    if (checkWinner(newGameState)) {
+    const winnerSlots = checkWinner(newGameState);
+    if (winnerSlots) {
       winner = activePlayer;
     }
     if (isFullBoard(newGameState)) {
@@ -39,7 +44,7 @@ const Game = () => {
     newScore[winner] += 1;
     setScore(newScore);
 
-    setGameFinished(true);
+    setGameFinished(winnerSlots);
 
     alert("Winner: " + winner);
     return;

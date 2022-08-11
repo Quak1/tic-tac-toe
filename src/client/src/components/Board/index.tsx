@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
 import Square from "./Square";
-import { Board as BoardType } from "../../utils/types";
+import { Board as BoardType, GameFinishedType} from "../../utils/types";
 import { gameGrid } from "../../utils/theme";
 
 const styles = {
@@ -14,7 +14,7 @@ const styles = {
 
 interface Props {
   gameState: BoardType;
-  gameFinished: boolean;
+  gameFinished: GameFinishedType;
   clickSquare: (i: number) => void;
 }
 

@@ -12,16 +12,11 @@ const winningPositions = [
 ];
 
 export const checkWinner = (boardState: Board) => {
-  let winner = false;
-  winningPositions.forEach((entry) => {
+  const winner = winningPositions.find((entry) => {
     const first = boardState[entry[0]];
-    if (
-      first &&
-      first === boardState[entry[1]] &&
-      first === boardState[entry[2]]
-    ) {
-      winner = true;
-    }
+    return (
+      first && first === boardState[entry[1]] && first === boardState[entry[2]]
+    );
   });
   return winner;
 };
