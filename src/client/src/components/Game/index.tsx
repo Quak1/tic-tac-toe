@@ -5,7 +5,6 @@ import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
 import Header from "./Header";
 import Footer from "./Footer";
-import "./game.css";
 
 const Game = () => {
   const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));

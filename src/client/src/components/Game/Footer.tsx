@@ -1,4 +1,13 @@
+import { Box } from "@mui/material";
+
 import ScoreDisplay from "./ScoreDisplay";
+
+const styles = {
+  display: "flex",
+  justifyContent: "space-between",
+  maxWidth: "500px",
+  textAlign: "center",
+};
 
 interface Props {
   score: {
@@ -10,11 +19,11 @@ interface Props {
 
 const Footer = ({ score }: Props) => {
   return (
-    <div className="game-footer">
+    <Box sx={styles}>
       <ScoreDisplay player="x" score={score.x} />
       <ScoreDisplay player="tie" score={score.tie} />
       <ScoreDisplay player="o" score={score.o} />
-    </div>
+    </Box>
   );
 };
 
