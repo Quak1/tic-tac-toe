@@ -1,6 +1,17 @@
+import { Box } from "@mui/material";
+
 import Square from "./Square";
 import { Board as BoardType } from "../../utils/types";
-import "./Board.css";
+
+const styles = {
+  display: "grid",
+  gap: "15px",
+  gridTemplateColumns: "repeat(3, minmax(10px, 1fr))",
+  gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
+
+  maxWidth: "500px",
+  aspectRatio: " 1 / 1",
+};
 
 interface Props {
   gameState: BoardType;
@@ -22,7 +33,7 @@ const Board = ({ gameState, gameFinished, clickSquare }: Props) => {
     );
   }
 
-  return <div className="board">{squares}</div>;
+  return <Box sx={styles}>{squares}</Box>;
 };
 
 export default Board;
