@@ -1,7 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { Player } from "../../utils/types";
-import { borderRadius } from "../../utils/theme";
+import { borderRadius, gameGrid } from "../../utils/theme";
 
 interface Props {
   score: number;
@@ -19,12 +19,16 @@ const ScoreDisplay = ({ score, player }: Props) => {
     backgroundColor: "colors." + backgroundColor,
     color: "background.default",
     borderRadius: borderRadius,
+    padding: "10px 0",
+    marginTop: gameGrid.gap,
   };
 
   return (
     <Box sx={styles}>
-      <div>{label}</div>
-      <div>{score}</div>
+      <Typography sx={{ fontWeight: "bold", fontSize: 12 }}>
+        {label.toUpperCase()}
+      </Typography>
+      <Typography sx={{ fontWeight: "bold", fontSize: 20 }}>{score}</Typography>
     </Box>
   );
 };

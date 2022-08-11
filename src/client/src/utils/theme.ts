@@ -35,7 +35,7 @@ export const darkTheme = createTheme({
 
 export const gameGrid = {
   display: "grid",
-  gap: "4%",
+  gap: "15px",
   gridTemplateColumns: "repeat(3, minmax(10px, 1fr))",
   gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
 };
