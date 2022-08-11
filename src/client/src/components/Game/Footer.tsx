@@ -1,3 +1,5 @@
+import ScoreDisplay from "./ScoreDisplay";
+
 interface Props {
   score: {
     x: number;
@@ -7,7 +9,13 @@ interface Props {
 }
 
 const Footer = ({ score }: Props) => {
-  return <div>{`${score.x} - ${score.tie} - ${score.o}`}</div>;
+  return (
+    <div className="game-footer">
+      <ScoreDisplay player="x" score={score.x} />
+      <ScoreDisplay player="tie" score={score.tie} />
+      <ScoreDisplay player="o" score={score.o} />
+    </div>
+  );
 };
 
 export default Footer;
