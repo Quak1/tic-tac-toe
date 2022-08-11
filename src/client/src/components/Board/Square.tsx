@@ -1,8 +1,10 @@
 import { Box } from "@mui/material";
 
-import Cross from "../../icons/cross.svg";
-import Circle from "../../icons/circle.svg";
+import { ReactComponent as Cross } from "../../icons/cross.svg";
+import { ReactComponent as Circle } from "../../icons/circle.svg";
 import { Board } from "../../utils/types";
+
+import { darkTheme } from "../../utils/theme";
 
 const styles = {
   display: "flex",
@@ -14,7 +16,7 @@ const styles = {
     filter: "brightness(90%)",
     cursor: "pointer",
   },
-  "& img": {
+  "& svg": {
     height: "90%",
     width: "90%",
   },
@@ -29,14 +31,18 @@ interface Props {
 
 const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
   const enabled: boolean = !gameState[index];
+  console.log(darkTheme);
 
   const handleClick = () => {
     clickSquare(index);
   };
 
-  const imgSrc = gameState[index] === "x" ? Cross : Circle;
-  const imgAlt = gameState[index] === "x" ? "Cross" : "Circle";
-  const content = enabled ? null : <img src={imgSrc} alt={imgAlt} />;
+  let content;
+  if (gameState[index] === "x") {
+    content = <Cross fill={darkTheme.palette.colors.cross} />;
+  } else if (gameState[index] === "o") {
+    content = <Circle fill={darkTheme.palette.colors.circle} />;
+  }
   const onClick = enabled && !gameFinished ? handleClick : undefined;
 
   return (

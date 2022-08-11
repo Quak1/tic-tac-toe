@@ -1,6 +1,14 @@
 import { createTheme } from "@mui/material/styles";
 
 declare module "@mui/material/styles" {
+  interface Palette {
+    colors: {
+      cross: string;
+      circle: string;
+      accent: string;
+    };
+  }
+
   interface PaletteOptions {
     colors?: {
       cross?: string;
