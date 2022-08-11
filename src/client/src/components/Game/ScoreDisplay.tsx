@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 
 import { Player } from "../../utils/types";
+import { borderRadius } from "../../utils/theme";
 
 interface Props {
   score: number;
@@ -17,7 +18,7 @@ const ScoreDisplay = ({ score, player }: Props) => {
     flexGrow: 1,
     backgroundColor: "colors." + backgroundColor,
     color: "background.default",
-    borderRadius: "15px",
+    borderRadius: borderRadius,
   };
 
   return (

@@ -4,21 +4,22 @@ import { ReactComponent as Cross } from "../../icons/cross.svg";
 import { ReactComponent as Circle } from "../../icons/circle.svg";
 import { Board } from "../../utils/types";
 
-import { darkTheme } from "../../utils/theme";
+import { darkTheme, borderRadius } from "../../utils/theme";
 
 const styles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  borderRadius: "15px",
+  borderRadius: borderRadius,
   backgroundColor: "background.paper",
+  boxShadow: "0 5px rgba(0, 0, 0, 0.2)",
   "&:hover": {
     filter: "brightness(90%)",
     cursor: "pointer",
   },
   "& svg": {
-    height: "90%",
-    width: "90%",
+    height: "65%",
+    width: "65%",
   },
 };
 
@@ -31,7 +32,6 @@ interface Props {
 
 const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
   const enabled: boolean = !gameState[index];
-  console.log(darkTheme);
 
   const handleClick = () => {
     clickSquare(index);

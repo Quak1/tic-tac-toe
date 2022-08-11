@@ -18,33 +18,26 @@ declare module "@mui/material/styles" {
   }
 }
 
-export const theme = {
-  colors: {
-    background: "#011936",
-    cross: "#ED254E",
-    circle: "#F9DC5C",
-    accent: "#C2EABD",
-  },
-};
-
 export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     background: {
-      default: "#011936",
-      paper: "#022550",
+      default: "#192a32",
+      paper: "#1f3540",
     },
     colors: {
-      cross: "#D68FD6",
-      circle: "#F9DC5C",
-      accent: "#C2EABD",
+      cross: "#31c4be",
+      circle: "#f2b237",
+      accent: "#a8bdc9",
     },
   },
 });
 
 export const gameGrid = {
   display: "grid",
-  gap: "15px",
+  gap: "4%",
   gridTemplateColumns: "repeat(3, minmax(10px, 1fr))",
   gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
 };
+
+export const borderRadius = "10px";
