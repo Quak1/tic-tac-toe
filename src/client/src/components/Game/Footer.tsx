@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
 
 import ScoreDisplay from "./ScoreDisplay";
+import { gameGrid } from "../../utils/theme";
 
 const styles = {
-  display: "flex",
+  ...gameGrid,
   justifyContent: "space-between",
   maxWidth: "500px",
   textAlign: "center",

@@ -2,13 +2,10 @@ import { Box } from "@mui/material";
 
 import Square from "./Square";
 import { Board as BoardType } from "../../utils/types";
+import { gameGrid } from "../../utils/theme";
 
 const styles = {
-  display: "grid",
-  gap: "15px",
-  gridTemplateColumns: "repeat(3, minmax(10px, 1fr))",
-  gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
-
+  ...gameGrid,
   maxWidth: "500px",
   aspectRatio: " 1 / 1",
 };
