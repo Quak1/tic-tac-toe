@@ -1,3 +1,7 @@
+import { Box, Button } from "@mui/material";
+
+import Circle from "../Icons/Circle";
+import Cross from "../Icons/Cross";
 import { Player } from "../../utils/types";
 
 interface Props {
@@ -7,10 +11,14 @@ interface Props {
 
 const Header = ({ resetBoard, activePlayer }: Props) => {
   return (
-    <div>
+    <Box>
+      <Box>
+        <Cross />
+        <Circle />
+      </Box>
       {`${activePlayer}'s turn `}
-      <button onClick={resetBoard}>reset game</button>
-    </div>
+      <Button onClick={resetBoard}>reset game</Button>
+    </Box>
   );
 };
 

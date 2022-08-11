@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 
-import { ReactComponent as Cross } from "../../icons/cross.svg";
-import { ReactComponent as Circle } from "../../icons/circle.svg";
+import Circle from "../Icons/Circle";
+import Cross from "../Icons/Cross";
 import { Board } from "../../utils/types";
 
-import { darkTheme, borderRadius } from "../../utils/theme";
+import { borderRadius } from "../../utils/theme";
 
 const styles = {
   display: "flex",
@@ -39,9 +39,9 @@ const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
 
   let content;
   if (gameState[index] === "x") {
-    content = <Cross fill={darkTheme.palette.colors.cross} />;
+    content = <Cross />;
   } else if (gameState[index] === "o") {
-    content = <Circle fill={darkTheme.palette.colors.circle} />;
+    content = <Circle />;
   }
   const onClick = enabled && !gameFinished ? handleClick : undefined;
 
