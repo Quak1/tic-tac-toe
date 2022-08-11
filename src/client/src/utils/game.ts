@@ -25,3 +25,8 @@ export const checkWinner = (boardState: Board) => {
   });
   return winner;
 };
+
+export const isFullBoard = (boardState: Board) => {
+  const index = boardState.findIndex((entry) => entry === "");
+  return index === -1 ? true : false;
+};
