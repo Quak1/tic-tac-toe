@@ -6,8 +6,10 @@ import { gameGrid } from "../../utils/theme";
 
 const styles = {
   ...gameGrid,
+  gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
   maxWidth: "500px",
-  aspectRatio: " 1 / 1",
+  aspectRatio: "1 / 1",
+  margin: gameGrid.gap + " 0",
 };
 
 interface Props {

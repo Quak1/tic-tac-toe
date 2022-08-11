@@ -20,7 +20,6 @@ const ScoreDisplay = ({ score, player }: Props) => {
     color: "background.default",
     borderRadius: borderRadius,
     padding: "10px 0",
-    marginTop: gameGrid.gap,
   };
 
   return (

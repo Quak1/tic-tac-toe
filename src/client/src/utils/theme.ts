@@ -37,7 +37,6 @@ export const gameGrid = {
   display: "grid",
   gap: "15px",
   gridTemplateColumns: "repeat(3, minmax(10px, 1fr))",
-  gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
 };
 
 export const borderRadius = "10px";

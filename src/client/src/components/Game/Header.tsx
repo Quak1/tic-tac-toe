@@ -1,8 +1,55 @@
-import { Box, Button } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
+import { Replay as ReplayIcon } from "@mui/icons-material";
 
 import Circle from "../Icons/Circle";
 import Cross from "../Icons/Cross";
 import { Player } from "../../utils/types";
+import { gameGrid, darkTheme, borderRadius } from "../../utils/theme";
+
+const styles = {
+  container: {
+    ...gameGrid,
+    alignItems: "center",
+    justifyItems: "center",
+    maxWidth: 500,
+    height: 40,
+    backgroundColor: "gray",
+  },
+  iconsContainer: {
+    display: "flex",
+    justifySelf: "start",
+    "& svg": {
+      height: "20px",
+      width: "20px",
+      marginRight: 1,
+    },
+  },
+  playerLabel: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: darkTheme.palette.background.paper,
+    justifySelf: "stretch",
+    alignSelf: "stretch",
+    borderRadius: borderRadius,
+
+    fontWeight: "bold",
+    fontSize: 15,
+    color: darkTheme.palette.colors.accent,
+    "& svg": {
+      fill: darkTheme.palette.colors.accent,
+      height: "20px",
+      width: "20px",
+      marginRight: 1,
+    },
+  },
+  resetButton: {
+    backgroundColor: darkTheme.palette.colors.accent,
+    color: darkTheme.palette.background.default,
+    borderRadius: "7px",
+    justifySelf: "end",
+  },
+};
 
 interface Props {
   resetBoard: () => void;
@@ -10,14 +57,17 @@ interface Props {
 }
 
 const Header = ({ resetBoard, activePlayer }: Props) => {
+  const playerIcon = activePlayer === "x" ? <Cross /> : <Circle />;
   return (
-    <Box>
-      <Box>
+    <Box sx={styles.container}>
+      <Box sx={styles.iconsContainer}>
         <Cross />
         <Circle />
       </Box>
-      {`${activePlayer}'s turn `}
-      <Button onClick={resetBoard}>reset game</Button>
+      <Typography sx={styles.playerLabel}>{playerIcon} TURN</Typography>
+      <IconButton onClick={resetBoard} sx={styles.resetButton}>
+        <ReplayIcon />
+      </IconButton>
     </Box>
   );
 };
