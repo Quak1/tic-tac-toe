@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Box } from "@mui/material";
 
 import {
   Board as BoardType,
@@ -9,6 +10,12 @@ import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
 import Header from "./Header";
 import Footer from "./Footer";
+
+const styles = {
+  maxWidth: "520px",
+  width: "100%",
+  padding: "0 10px",
+};
 
 const Game = () => {
   const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));
@@ -49,7 +56,7 @@ const Game = () => {
   };
 
   return (
-    <div>
+    <Box sx={styles}>
       <Header resetBoard={resetBoard} activePlayer={activePlayer} />
       <Board
         gameState={gameState}
@@ -57,7 +64,7 @@ const Game = () => {
         clickSquare={clickSquare}
       />
       <Footer score={score} />
-    </div>
+    </Box>
   );
 };
 

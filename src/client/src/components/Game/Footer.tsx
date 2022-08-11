@@ -6,7 +6,6 @@ import { gameGrid } from "../../utils/theme";
 const styles = {
   ...gameGrid,
   justifyContent: "space-between",
-  maxWidth: "500px",
   textAlign: "center",
 };
 

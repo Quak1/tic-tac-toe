@@ -11,7 +11,6 @@ const styles = {
     ...gameGrid,
     alignItems: "center",
     justifyItems: "center",
-    maxWidth: 500,
     height: 40,
   },
   iconsContainer: {
