@@ -10,6 +10,7 @@ import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
 import Header from "./Header";
 import Footer from "./Footer";
+import GameEndDialog from "./GameEndDialog";
 
 const styles = {
   maxWidth: "520px",
@@ -22,6 +23,8 @@ const Game = () => {
   const [activePlayer, setActivePlayer] = useState<Player>("x");
   const [gameFinished, setGameFinished] = useState<GameFinishedType>();
   const [score, setScore] = useState({ x: 0, tie: 0, o: 0 });
+
+  const [openDialog, setOpenDialog] = useState(false);
 
   const resetBoard = () => {
     setGameState(new Array(9).fill(""));
@@ -50,9 +53,13 @@ const Game = () => {
     setScore(newScore);
 
     setGameFinished(winnerSlots);
+    setOpenDialog(true);
 
-    alert("Winner: " + winner);
     return;
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
@@ -64,6 +71,12 @@ const Game = () => {
         clickSquare={clickSquare}
       />
       <Footer score={score} />
+      <GameEndDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        activePlayer={activePlayer}
+        winner={true}
+      />
     </Box>
   );
 };
