@@ -23,6 +23,7 @@ const Game = () => {
   const [activePlayer, setActivePlayer] = useState<Player>("x");
   const [gameFinished, setGameFinished] = useState<GameFinishedType>();
   const [score, setScore] = useState({ x: 0, tie: 0, o: 0 });
+  const [winner, setWinner] = useState<string>();
 
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -48,9 +49,11 @@ const Game = () => {
       return;
     }
 
+    console.log(winnerSlots);
     const newScore = { ...score };
     newScore[winner] += 1;
     setScore(newScore);
+    setWinner(winner);
 
     setGameFinished(winnerSlots);
     setOpenDialog(true);
@@ -74,8 +77,8 @@ const Game = () => {
       <GameEndDialog
         open={openDialog}
         onClose={handleCloseDialog}
-        activePlayer={activePlayer}
-        winner={true}
+        winner={winner}
+        isWinner={true}
         resetBoard={resetBoard}
       />
     </Box>

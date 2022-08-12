@@ -46,32 +46,35 @@ const styles = {
 interface Props {
   open: boolean;
   onClose: () => void;
-  activePlayer: Player;
-  winner: boolean;
+  winner?: string;
+  isWinner: boolean;
   resetBoard: () => void;
 }
 
 const GameEndDialog = ({
   onClose,
   open,
-  activePlayer,
   winner,
+  isWinner,
   resetBoard,
 }: Props) => {
   const nextButtonColor =
-    activePlayer === "x"
+    winner === "x"
       ? darkTheme.palette.colors.circle
       : darkTheme.palette.colors.cross;
 
   const messageColor =
-    activePlayer === "x"
+    winner === "x"
       ? darkTheme.palette.colors.cross
       : darkTheme.palette.colors.circle;
+
+  const isTie = winner === "tie";
 
   const handleNextRound = () => {
     resetBoard();
     onClose();
   };
+  console.log(winner);
 
   return (
     <Dialog
@@ -86,13 +89,21 @@ const GameEndDialog = ({
       }}
     >
       <Box sx={styles.container}>
-        <Typography sx={styles.winner}>
-          {winner ? "YOU WON!" : "YOU LOSE :("}
-        </Typography>
+        {!isTie && (
+          <Typography sx={styles.winner}>
+            {isWinner ? "YOU WON!" : "YOU LOSE :("}
+          </Typography>
+        )}
 
         <Box sx={{ ...styles.message, color: messageColor }}>
-          {activePlayer === "x" ? <Cross /> : <Circle />}
-          TAKES THE ROUND
+          {!isTie ? (
+            <>
+              {winner === "x" ? <Cross /> : <Circle />}
+              TAKES THE ROUND
+            </>
+          ) : (
+            <>IT'S A TIE!</>
+          )}
         </Box>
 
         <Box sx={styles.buttons}>
