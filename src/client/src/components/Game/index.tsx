@@ -76,6 +76,7 @@ const Game = () => {
         onClose={handleCloseDialog}
         activePlayer={activePlayer}
         winner={true}
+        resetBoard={resetBoard}
       />
     </Box>
   );

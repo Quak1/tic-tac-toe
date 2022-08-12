@@ -39,8 +39,8 @@ const styles = {
   },
   buttons: {
     display: "flex",
-    gap: 1
-  }
+    gap: 1,
+  },
 };
 
 interface Props {
@@ -48,9 +48,16 @@ interface Props {
   onClose: () => void;
   activePlayer: Player;
   winner: boolean;
+  resetBoard: () => void;
 }
 
-const GameEndDialog = ({ onClose, open, activePlayer, winner }: Props) => {
+const GameEndDialog = ({
+  onClose,
+  open,
+  activePlayer,
+  winner,
+  resetBoard,
+}: Props) => {
   const nextButtonColor =
     activePlayer === "x"
       ? darkTheme.palette.colors.circle
@@ -60,6 +67,11 @@ const GameEndDialog = ({ onClose, open, activePlayer, winner }: Props) => {
     activePlayer === "x"
       ? darkTheme.palette.colors.cross
       : darkTheme.palette.colors.circle;
+
+  const handleNextRound = () => {
+    resetBoard();
+    onClose();
+  };
 
   return (
     <Dialog
@@ -85,10 +97,7 @@ const GameEndDialog = ({ onClose, open, activePlayer, winner }: Props) => {
 
         <Box sx={styles.buttons}>
           <BoardButton onClick={onClose}>QUIT</BoardButton>
-          <BoardButton
-            onClick={() => console.log("next round")}
-            color={nextButtonColor}
-          >
+          <BoardButton onClick={handleNextRound} color={nextButtonColor}>
             NEXT ROUND
           </BoardButton>
         </Box>
