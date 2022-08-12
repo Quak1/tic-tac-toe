@@ -3,7 +3,6 @@ import { Dialog, Box, Typography } from "@mui/material";
 import Cross from "../Icons/Cross";
 import Circle from "../Icons/Circle";
 import BoardButton from "../BoardButton";
-import { Player } from "../../utils/types";
 import { darkTheme } from "../../utils/theme";
 
 const styles = {
@@ -74,7 +73,6 @@ const GameEndDialog = ({
     resetBoard();
     onClose();
   };
-  console.log(winner);
 
   return (
     <Dialog

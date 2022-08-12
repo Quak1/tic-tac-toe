@@ -49,7 +49,6 @@ const Game = () => {
       return;
     }
 
-    console.log(winnerSlots);
     const newScore = { ...score };
     newScore[winner] += 1;
     setScore(newScore);
