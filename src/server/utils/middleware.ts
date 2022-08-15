@@ -4,36 +4,35 @@ import jwt from "jsonwebtoken";
 import redis from "./redis";
 import { SECRET } from "./config";
 import { TokenFields } from "./types";
+import errorMessages from "./errorMessages";
 
 export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
   console.log("errorHandler", error);
 
-  /* if (error.name === "ValidationError") {
-    return res.status(400).json({ error: error.message });
-  } */
+  let errorName = error.name;
+  if (errorName === "Error") errorName = error.message;
 
-  res.status(403);
-  res.send({ error: "unknown error" });
+  res.status(errorMessages[errorName]?.status || 500);
+  res.send(errorMessages[errorName]?.message || "Internal Server Error");
 };
 
 export const userExtractor: RequestHandler = async (req, res, next) => {
-  const authorization = req.get("authorization");
-  if (!authorization) next(new Error("missingToken"));
-  else {
-    if (!authorization.toLowerCase().startsWith("bearer "))
-      next(new Error("invalidToken"));
+  try {
+    const authorization = req.get("authorization");
+    if (!authorization || !authorization.toLowerCase().startsWith("bearer "))
+      throw new Error("missingToken");
 
     const token = authorization.substring(7);
     const decodedToken = jwt.verify(token, SECRET) as TokenFields;
-
-    if (!decodedToken.id) next(new Error("invalidToken"));
+    if (!decodedToken.id) throw new Error("invalidToken");
 
     const user = await redis.get("user:" + decodedToken.id);
-
-    if (!(decodedToken.username === user)) next(new Error("invalidUser"));
+    if (!(decodedToken.username === user)) throw new Error("invalidUser");
 
     res.locals.id = decodedToken.id;
     res.locals.username = decodedToken.username;
     next();
+  } catch (e) {
+    next(e);
   }
 };
