@@ -1,12 +1,16 @@
 import express from "express";
 const router = express.Router();
 
-router.post("/", (req, res) => {
-  const { username } = req.body;
+import redis from "../utils/redis";
 
+router.post("/", async (req, res) => {
+  const { username } = req.body;
   if (!username) return res.sendStatus(401);
 
-  res.send(username);
+  const id = await redis.incr("user:id");
+  await redis.set(`user:${id}`, username);
+
+  res.send({ username, id });
 });
 
 export default router;
