@@ -1,10 +1,15 @@
 import express from "express";
 
+import indexRouter from "./routes/index";
+import loginRouter from "./routes/login";
+
 const app = express();
 
-app.get("/", (req, res) => {
-  console.log("request at", req.originalUrl);
-  res.json({ foo: "bar" });
-});
+// middleware
+app.use(express.json());
+
+// routes
+app.use("/index", indexRouter);
+app.use("/login", loginRouter);
 
 export default app;
