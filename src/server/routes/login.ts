@@ -1,7 +1,9 @@
+import jwt from "jsonwebtoken";
 import express from "express";
 const router = express.Router();
 
 import redis from "../utils/redis";
+import { SECRET } from "../utils/config";
 
 router.post("/", async (req, res) => {
   const { username } = req.body;
@@ -9,8 +11,9 @@ router.post("/", async (req, res) => {
 
   const id = await redis.incr("user:id");
   await redis.set(`user:${id}`, username);
+  const token = jwt.sign({ username, id }, SECRET);
 
-  res.send({ username, id });
+  res.send({ username, id, token });
 });
 
 export default router;
