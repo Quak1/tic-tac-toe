@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 
 // routes
-app.use("/index", indexRouter);
+app.use("/", indexRouter);
 app.use("/login", loginRouter);
 app.use("/game", gameRouter);
 
