@@ -34,3 +34,10 @@ export const waitForMessage = (key: string) => {
 export const removeListener = (_listener: ListenerFunction) => {
   redisSub.removeListener("message", _listener);
 };
+
+export const getMessage = async (key: string) => {
+  subscribeToChannel(key);
+  const res = await waitForMessage(key);
+  removeListener(res._listener);
+  return res;
+};
