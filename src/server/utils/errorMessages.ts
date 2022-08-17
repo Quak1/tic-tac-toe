@@ -20,6 +20,22 @@ const errorMessages: Record<string, errorInfo> = {
     status: 401,
     message: "invalid token",
   },
+  invalidPosition: {
+    status: 400,
+    message: "position must be a number between 0 and 8",
+  },
+  invalidGameId: {
+    status: 404,
+    message: "this game doesn't exist",
+  },
+  playedPosition: {
+    status: 400,
+    message: "this position has already been played",
+  },
+  notActivePlayer: {
+    status: 400,
+    message: "you are not the active player",
+  },
 };
 
 export default errorMessages;
