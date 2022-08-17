@@ -26,7 +26,7 @@ export const userExtractor: RequestHandler = async (req, res, next) => {
     const decodedToken = jwt.verify(token, SECRET) as TokenFields;
     if (!decodedToken.id) throw new Error("invalidToken");
 
-    const user = await redis.get("user:" + decodedToken.id);
+    const user = await redis.getRefresh("user:" + decodedToken.id);
     if (!(decodedToken.username === user)) throw new Error("invalidUser");
 
     res.locals.id = decodedToken.id;
