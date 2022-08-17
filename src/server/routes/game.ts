@@ -4,6 +4,7 @@ const router = express.Router();
 import redis from "../utils/redis";
 import { userExtractor } from "../utils/middleware";
 import { getMessage } from "../utils/subscribe";
+import { isGameFinished } from "../utils/game";
 
 router.use(userExtractor);
 
@@ -91,10 +92,7 @@ router.post("/:gameId", async (req, res) => {
   if (typeof position !== "number" || position < 0 || position > 8)
     throw new Error("invalidPosition");
 
-  // TODO check if game is over
-  // send gameover through channel
-
-  // game is not over
+  // update game state
   const playerPiece = game[activePlayer + "Piece"];
   const newActivePlayer = activePlayer === "playerA" ? "playerB" : "playerA";
   await redis
@@ -103,15 +101,23 @@ router.post("/:gameId", async (req, res) => {
     .hmset(gameKey, position, playerPiece, "activePlayer", newActivePlayer)
     .exec();
 
+  game[position] = playerPiece;
+  const winner = isGameFinished(game);
   const gameChannel = gameKey + ":wait";
-  await redis.publish(gameChannel, playerPiece);
-  await getMessage(gameChannel);
-  const newGame = await redis.hgetall(gameKey);
+  if (winner) {
+    // announce that game has ended
+    await redis.hset(gameKey, "isOver", "true");
+    await redis.publish(gameChannel, "winner," + winner);
+  } else {
+    await redis.publish(gameChannel, playerPiece);
+    await getMessage(gameChannel);
+  }
 
+  const newGame = await redis.hgetall(gameKey);
   res.send({ game: newGame });
 });
 
-router.get("/:gameId", async (req, res) => {
+router.get("/:gameId/wait", async (req, res) => {
   res.send();
 });
 
