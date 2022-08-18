@@ -8,6 +8,7 @@
     "src/client"
   ],
   "scripts": {
+    "postinstall": "npm install --prefix ./src/server",
     "start": "npm run start:dev -w server & npm run start -w client",
     "start:ui": "npm run start -w client",
     "build:ui": "npm run build -w client"
