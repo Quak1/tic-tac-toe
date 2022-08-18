@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "tsc",
-    "start": "node build/server.js",
+    "start": "node build/index.js",
     "start:dev": "nodemon ./index.ts"
   },
   "keywords": [],
