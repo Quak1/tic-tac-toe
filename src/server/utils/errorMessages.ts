@@ -36,6 +36,10 @@ const errorMessages: Record<string, errorInfo> = {
     status: 400,
     message: "you are not the active player",
   },
+  finishedGame: {
+    status: 400,
+    message: "game is finished",
+  },
 };
 
 export default errorMessages;

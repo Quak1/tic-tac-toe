@@ -5,6 +5,7 @@ import redis from "../utils/redis";
 import { userExtractor } from "../utils/middleware";
 import { getMessage } from "../utils/subscribe";
 import { isGameFinished } from "../utils/game";
+import { GAME_TIMEOUT } from "../utils/config";
 
 router.use(userExtractor);
 
@@ -49,8 +50,9 @@ router.get("/challenge/:id", async (req, res) => {
     move: 0,
     isOver: false,
   };
-  // TODO expire game after 60min
+
   await redis.hmset(`game:${gameId}`, gameObject);
+  await redis.expire(`game:${gameId}`, GAME_TIMEOUT);
 
   redis.publish(channel, String(gameId));
 
@@ -84,7 +86,10 @@ router.post("/:gameId", async (req, res) => {
 
   const gameKey = `game:${gameId}`;
   const game = await redis.hgetall(gameKey);
+
   if (Object.keys(game).length === 0) throw new Error("invalidGameId");
+  if (game.isOver.toLowerCase() === "true") throw new Error("finishedGame");
+
   const { activePlayer } = game;
 
   if (Number(game[activePlayer]) !== id) throw new Error("notActivePlayer");
@@ -118,7 +123,13 @@ router.post("/:gameId", async (req, res) => {
 });
 
 router.get("/:gameId/wait", async (req, res) => {
-  res.send();
+  const { gameId } = req.params;
+  const gameKey = `game:${gameId}`;
+  const gameChannel = `${gameKey}:wait`;
+  await getMessage(gameChannel);
+
+  const game = await redis.hgetall(gameKey);
+  res.send({ game });
 });
 
 export default router;
