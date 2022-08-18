@@ -7,6 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "preinstall": "npm install",
     "start": "tsc && node build/server.js",
     "start:dev": "nodemon ./index.ts"
   },
