@@ -5,7 +5,7 @@ import redis from "../utils/redis";
 import { userExtractor } from "../utils/middleware";
 import { getMessage } from "../utils/subscribe";
 import { isGameFinished } from "../utils/game";
-import { GAME_TIMEOUT } from "../utils/config";
+import { GAME_TTL } from "../utils/config";
 
 router.use(userExtractor);
 
@@ -52,7 +52,7 @@ router.get("/challenge/:id", async (req, res) => {
   };
 
   await redis.hmset(`game:${gameId}`, gameObject);
-  await redis.expire(`game:${gameId}`, GAME_TIMEOUT);
+  await redis.expire(`game:${gameId}`, GAME_TTL);
 
   redis.publish(channel, String(gameId));
 

@@ -1,6 +1,6 @@
 import Redis, { Result, Callback } from "ioredis";
 
-import { REDIS_URL, ANON_USER_TIMEOUT } from "./config";
+import { REDIS_URL, ANON_USER_TTL } from "./config";
 
 // TODO handle connection error
 const redis = new Redis(REDIS_URL);
@@ -12,7 +12,7 @@ redis.defineCommand("getRefresh", {
   local key = KEYS[1]
   local val = redis.call("get", key)
   if (val) then
-    redis.call("expire", key, ${ANON_USER_TIMEOUT})
+    redis.call("expire", key, ${ANON_USER_TTL})
   end
   return val
   `,

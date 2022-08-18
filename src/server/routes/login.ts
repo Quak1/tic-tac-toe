@@ -3,14 +3,14 @@ import express from "express";
 const router = express.Router();
 
 import redis from "../utils/redis";
-import { SECRET, ANON_USER_TIMEOUT } from "../utils/config";
+import { SECRET, ANON_USER_TTL } from "../utils/config";
 
 router.post("/", async (req, res) => {
   const { username } = req.body;
   if (!username) return res.sendStatus(401);
 
   const id = await redis.incr("user:id");
-  await redis.set(`user:${id}`, username, "EX", ANON_USER_TIMEOUT);
+  await redis.set(`user:${id}`, username, "EX", ANON_USER_TTL);
   const token = jwt.sign({ username, id }, SECRET);
 
   res.send({ username, id, token });
