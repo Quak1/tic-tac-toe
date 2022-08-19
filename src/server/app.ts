@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 
 import { errorHandler } from "./utils/middleware";
 import indexRouter from "./routes/index";
@@ -9,6 +10,7 @@ const app = express();
 
 // middleware
 app.use(express.json());
+app.use(cors({ origin: "http://localhost:3000" }));
 
 // routes
 app.use("/", indexRouter);
