@@ -44,6 +44,9 @@ export const getMessage = async <T = string>(key: string) => {
   return parsed;
 };
 
-export const publishMessage = async (channel: string, data: object) => {
+export const publishMessage = async (
+  channel: string,
+  data: Record<string, unknown>
+) => {
   return await redis.publish(channel, JSON.stringify(data));
 };

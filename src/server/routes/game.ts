@@ -1,90 +1,17 @@
 import express from "express";
 const router = express.Router();
 
+import gameChallengeRouter from "./gameChallenge";
 import redis, { GAME_ID, USER_ID, userKey, gameKey } from "../services/redis";
 import userExtractor from "../middleware/userExtractor";
 import { getMessage, publishMessage } from "../services/subscribe";
 import { isGameFinished } from "../utils/game";
-import { GAME_TIMEOUT } from "../config";
-import { UserDetails, BaseParams, GameState } from "../utils/types";
 
 router.use(userExtractor);
 
-// wait for match
-router.get<never, UserDetails, never, never, UserDetails>(
-  "/wait",
-  async (_req, res) => {
-    const id = res.locals.id;
+router.use(gameChallengeRouter);
 
-    const key = userKey(id, true);
-    const challenger = await getMessage<UserDetails>(key);
-
-    res.send({
-      username: challenger.username,
-      id: challenger.id,
-    });
-  }
-);
-
-// challenge to match
-router.get<BaseParams, GameState, never, never, UserDetails>(
-  "/challenge/:id",
-  async (req, res) => {
-    const opponentId = req.params.id;
-    const { username, id } = res.locals;
-
-    const opponentChannel = userKey(opponentId, true);
-    await publishMessage(opponentChannel, { username, id });
-
-    const channel = userKey(id, true);
-    const subResponse = await getMessage<{ message: string }>(channel);
-
-    if (subResponse.message !== "accept") throw new Error("challengeDenied");
-
-    // setup game in db
-    const gameId = await redis.incr(GAME_ID);
-    const playerAPiece = Math.floor(Math.random() * 2) ? "x" : "o";
-    const gameObject: GameState = {
-      id: gameId,
-      playerA: Number(opponentId),
-      playerB: Number(id),
-      playerAPiece,
-      playerBPiece: playerAPiece === "x" ? "o" : "x",
-      activePlayer: playerAPiece === "x" ? "playerA" : "playerB",
-      move: 0,
-      isOver: false,
-    };
-
-    const key = gameKey(gameId);
-    await redis.hmset(key, gameObject);
-    await redis.expire(key, GAME_TIMEOUT);
-
-    await publishMessage(opponentChannel, { gameId });
-
-    res.send(gameObject);
-  }
-);
-
-router.get("/challenge", async (req, res) => {
-  const { id } = res.locals;
-  const { reply, opponentId } = req.query;
-  if (!reply || !opponentId) res.sendStatus(400);
-
-  const channel = `user:${opponentId}:wait`;
-  redis.publish(channel, reply as string);
-
-  if (reply !== "accept") {
-    res.send({ message: "challenge denied" });
-  }
-
-  const key = `user:${id}:wait`;
-  const gameId = await getMessage(key);
-
-  const game = await redis.hgetall(`game:${gameId.message}`);
-
-  res.send(game);
-});
-
+// play turn
 router.post("/:gameId", async (req, res) => {
   const { gameId } = req.params;
   const { id } = res.locals;
@@ -128,6 +55,7 @@ router.post("/:gameId", async (req, res) => {
   res.send({ game: newGame });
 });
 
+// wait for first move
 router.get("/:gameId/wait", async (req, res) => {
   const { gameId } = req.params;
   const gameKey = `game:${gameId}`;

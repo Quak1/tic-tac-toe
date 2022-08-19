@@ -44,6 +44,10 @@ const errorMessages: Record<string, errorInfo> = {
     status: 200,
     message: "challenge denied",
   },
+  invalidReqBody: {
+    status: 400,
+    message: "the request body is malformed",
+  },
 };
 
 export default errorMessages;
