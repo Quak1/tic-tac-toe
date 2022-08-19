@@ -1,17 +1,4 @@
-type Piece = "x" | "o";
-export type Board = Array<Piece | "">;
-
-export interface RedisGameState {
-  id: number;
-  playerA: number;
-  playerB: number;
-  playerAPiece: Piece;
-  playerBPiece: Piece;
-  activePlayer: "playerA" | "playerB";
-  move: number;
-  isOver: boolean;
-  [key: number]: Piece;
-}
+import { Board } from "./types";
 
 const winningPositions = [
   [0, 1, 2],

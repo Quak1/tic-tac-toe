@@ -1,37 +1,41 @@
 import express from "express";
 const router = express.Router();
 
-import redis from "../services/redis";
+import redis, { userKey, gameKey } from "../services/redis";
 import userExtractor from "../middleware/userExtractor";
 import { getMessage } from "../services/subscribe";
 import { isGameFinished } from "../utils/game";
 import { GAME_TIMEOUT } from "../config";
+import { UserDetails } from "../utils/types";
 
 router.use(userExtractor);
 
-router.get("/wait", async (_req, res) => {
-  const id = res.locals.id;
+router.get<never, UserDetails, never, never, UserDetails>(
+  "/wait",
+  async (_req, res) => {
+    const id = res.locals.id;
 
-  const key = `user:${id}:wait`;
-  const subResponse = await getMessage(key);
-  const opponent = subResponse.message.split(",");
+    const key = userKey(id, true);
+    const subResponse = await getMessage(key);
+    const opponent = subResponse.message.split(",");
 
-  res.send({
-    opponent: {
+    res.send({
       username: opponent[0],
       id: opponent[1],
-    },
-  });
-});
+    });
+  }
+);
 
 router.get("/challenge/:id", async (req, res) => {
   const challengeId = req.params.id;
   const { username, id } = res.locals;
 
-  const channel = `user:${challengeId}:wait`;
+  // const channel = `user:${challengeId}:wait`;
+  const channel = userKey(challengeId, true);
   redis.publish(channel, `${username},${id}`);
 
-  const key = `user:${id}:wait`;
+  // const key = `user:${id}:wait`;
+  const key = userKey(id, true);
   const subResponse = await getMessage(key);
 
   if (subResponse.message !== "accept") {
