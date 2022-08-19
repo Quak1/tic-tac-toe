@@ -34,10 +34,12 @@ export default redis;
 
 const keyGenerator =
   (space: string) =>
-  (id: string, waiting = false) => {
+  (id: string | number, waiting = false) => {
     const key = `${space}:${id}`;
     return waiting ? `${key}:wait` : key;
   };
 
 export const userKey = keyGenerator("user");
 export const gameKey = keyGenerator("game");
+export const GAME_ID = "game:id";
+export const USER_ID = "user:id";

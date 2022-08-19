@@ -1,6 +1,6 @@
 export interface UserDetails {
   username: string;
-  id: string;
+  id: number;
 }
 
 export interface LoginCredentials {
@@ -13,7 +13,7 @@ export interface LoginDetails {
   id: number;
 }
 
-export interface BaseParams<IDType = number> {
+export interface BaseParams<IDType = string> {
   id: IDType;
 }
 

@@ -40,6 +40,10 @@ const errorMessages: Record<string, errorInfo> = {
     status: 400,
     message: "game is finished",
   },
+  challengeDenied: {
+    status: 200,
+    message: "challenge denied",
+  },
 };
 
 export default errorMessages;
