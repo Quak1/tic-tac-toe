@@ -1,4 +1,4 @@
-export interface TokenFields {
+export interface UserDetails {
   username: string;
   id: string;
 }

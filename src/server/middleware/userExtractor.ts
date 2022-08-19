@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 import redis from "../services/redis";
 import { SECRET } from "../config";
-import { TokenFields } from "../utils/types";
+import { UserDetails } from "../utils/types";
 
 const userExtractor: RequestHandler = async (req, res, next) => {
   try {
@@ -12,7 +12,7 @@ const userExtractor: RequestHandler = async (req, res, next) => {
       throw new Error("missingToken");
 
     const token = authorization.substring(7);
-    const decodedToken = jwt.verify(token, SECRET) as TokenFields;
+    const decodedToken = jwt.verify(token, SECRET) as UserDetails;
     if (!decodedToken.id) throw new Error("invalidToken");
 
     const user = await redis.getRefresh("user:" + decodedToken.id);
