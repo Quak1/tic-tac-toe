@@ -1,22 +1,11 @@
-import { RequestHandler, ErrorRequestHandler } from "express";
+import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 
-import redis from "./redis";
-import { SECRET } from "./config";
-import { TokenFields } from "./types";
-import errorMessages from "./errorMessages";
+import redis from "../services/redis";
+import { SECRET } from "../config";
+import { TokenFields } from "../utils/types";
 
-export const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
-  console.log("errorHandler", error);
-
-  let errorName = error.name;
-  if (errorName === "Error") errorName = error.message;
-
-  res.status(errorMessages[errorName]?.status || 500);
-  res.send(errorMessages[errorName]?.message || "Internal Server Error");
-};
-
-export const userExtractor: RequestHandler = async (req, res, next) => {
+const userExtractor: RequestHandler = async (req, res, next) => {
   try {
     const authorization = req.get("authorization");
     if (!authorization || !authorization.toLowerCase().startsWith("bearer "))
@@ -36,3 +25,5 @@ export const userExtractor: RequestHandler = async (req, res, next) => {
     next(e);
   }
 };
+
+export default userExtractor;

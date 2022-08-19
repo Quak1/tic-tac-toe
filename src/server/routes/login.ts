@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import express from "express";
 const router = express.Router();
 
-import redis from "../utils/redis";
-import { SECRET, ANON_USER_TIMEOUT } from "../utils/config";
+import redis from "../services/redis";
+import { SECRET, ANON_USER_TIMEOUT } from "../config";
 
 router.post("/", async (req, res) => {
   const { username } = req.body;

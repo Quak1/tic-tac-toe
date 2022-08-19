@@ -1,11 +1,11 @@
 import express from "express";
 const router = express.Router();
 
-import redis from "../utils/redis";
-import { userExtractor } from "../utils/middleware";
-import { getMessage } from "../utils/subscribe";
+import redis from "../services/redis";
+import userExtractor from "../middleware/userExtractor";
+import { getMessage } from "../services/subscribe";
 import { isGameFinished } from "../utils/game";
-import { GAME_TIMEOUT } from "../utils/config";
+import { GAME_TIMEOUT } from "../config";
 
 router.use(userExtractor);
 

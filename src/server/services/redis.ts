@@ -1,6 +1,6 @@
 import Redis, { Result, Callback } from "ioredis";
 
-import { REDIS_URL, ANON_USER_TIMEOUT } from "./config";
+import { REDIS_URL, ANON_USER_TIMEOUT } from "../config";
 
 // TODO handle connection error
 const redis = new Redis(REDIS_URL);
