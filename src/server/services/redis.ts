@@ -31,3 +31,13 @@ declare module "ioredis" {
 export const redisSub = new Redis(REDIS_URL);
 
 export default redis;
+
+const keyGenerator =
+  (space: string) =>
+  (id: string, waiting = false) => {
+    const key = `${space}:${id}`;
+    return waiting ? `${key}:wait` : key;
+  };
+
+export const userKey = keyGenerator("user");
+export const gameKey = keyGenerator("game");
