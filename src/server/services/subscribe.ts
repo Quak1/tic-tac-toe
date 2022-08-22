@@ -1,4 +1,4 @@
-import { redisSub } from "./redis";
+import redis, { redisSub } from "./redis";
 
 export const subscribeToChannel = (channel: string) => {
   redisSub.subscribe(channel, (err, count) => {
@@ -19,7 +19,7 @@ interface MessageListener {
   _listener: ListenerFunction;
 }
 
-export const waitForMessage = (key: string) => {
+const waitForMessage = (key: string) => {
   return new Promise<MessageListener>((resolve) => {
     const _listener = (channel: string, message: string) => {
       if (key === channel) {
@@ -31,13 +31,22 @@ export const waitForMessage = (key: string) => {
   });
 };
 
-export const removeListener = (_listener: ListenerFunction) => {
+const removeListener = (_listener: ListenerFunction) => {
   redisSub.removeListener("message", _listener);
 };
 
-export const getMessage = async (key: string) => {
+export const getMessage = async <T = string>(key: string) => {
   subscribeToChannel(key);
   const res = await waitForMessage(key);
   removeListener(res._listener);
-  return res;
+
+  const parsed: T = JSON.parse(res.message);
+  return parsed;
+};
+
+export const publishMessage = async (
+  channel: string,
+  data: Record<string, unknown>
+) => {
+  return await redis.publish(channel, JSON.stringify(data));
 };
