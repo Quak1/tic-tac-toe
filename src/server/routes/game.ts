@@ -6,7 +6,6 @@ import redis, { gameKey } from "../services/redis";
 import userExtractor from "../middleware/userExtractor";
 import { getMessage, publishMessage } from "../services/subscribe";
 import { isGameFinished } from "../utils/game";
-import { GAME_TTL } from "../config";
 import { GameState, BaseParams } from "../utils/types";
 import gameStateSchema from "../models/gameState";
 

@@ -2,7 +2,7 @@ import { ErrorRequestHandler } from "express";
 
 import errorMessages from "./errorMessages";
 
-const errorHandler: ErrorRequestHandler = (error, _req, res, next) => {
+const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
   console.log("errorHandler", error);
 
   let errorName = error.name;
