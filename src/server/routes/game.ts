@@ -18,9 +18,7 @@ router.post<BaseParams, GameState>("/:id", async (req, res) => {
   const { id } = res.locals;
   const position = Number(req.body.position);
 
-  // const gameKey = `game:${gameId}`;
   const key = gameKey(gameId);
-  // const game = await redis.hgetall(gameKey);
   const redisGameState = await redis.hgetall(key);
 
   if (Object.keys(gameStateSchema).length === 0)
@@ -47,16 +45,17 @@ router.post<BaseParams, GameState>("/:id", async (req, res) => {
 
   gameState[position] = playerPiece;
   const winner = isGameFinished(gameState);
-  // const gameChannel = gameKey + ":wait";
   const gameChannel = gameKey(gameId, true);
   if (winner) {
     // announce that game has ended
-    // TODO: fix winner message
     await redis.hset(key, "isOver", "true");
-    await redis.publish(gameChannel, "winner," + winner);
+    await publishMessage(gameChannel, { winner });
   } else {
     await publishMessage(gameChannel, { play: playerPiece });
-    await getMessage(gameChannel);
+    let message;
+    do {
+      message = await getMessage<Record<string, string>>(gameChannel);
+    } while (message.play === playerPiece);
   }
 
   const redisNewGame = await redis.hgetall(key);
