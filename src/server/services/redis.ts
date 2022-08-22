@@ -1,6 +1,6 @@
 import Redis, { Result, Callback } from "ioredis";
 
-import { REDIS_URL, ANON_USER_TTL } from "./config";
+import { REDIS_URL, ANON_USER_TTL } from "../config";
 
 // TODO handle connection error
 const redis = new Redis(REDIS_URL);
@@ -31,3 +31,15 @@ declare module "ioredis" {
 export const redisSub = new Redis(REDIS_URL);
 
 export default redis;
+
+const keyGenerator =
+  (space: string) =>
+  (id: string | number, waiting = false) => {
+    const key = `${space}:${id}`;
+    return waiting ? `${key}:wait` : key;
+  };
+
+export const userKey = keyGenerator("user");
+export const gameKey = keyGenerator("game");
+export const GAME_ID = "game:id";
+export const USER_ID = "user:id";

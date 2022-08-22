@@ -1,6 +1,6 @@
 import express from "express";
 
-import { errorHandler } from "./utils/middleware";
+import errorHandler from "./middleware/errorHandler";
 import indexRouter from "./routes/index";
 import loginRouter from "./routes/login";
 import gameRouter from "./routes/game";

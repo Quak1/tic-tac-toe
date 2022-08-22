@@ -40,6 +40,14 @@ const errorMessages: Record<string, errorInfo> = {
     status: 400,
     message: "game is finished",
   },
+  challengeDenied: {
+    status: 200,
+    message: "challenge denied",
+  },
+  invalidReqBody: {
+    status: 400,
+    message: "the request body is malformed",
+  },
 };
 
 export default errorMessages;
