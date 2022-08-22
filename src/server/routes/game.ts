@@ -2,13 +2,14 @@ import express from "express";
 const router = express.Router();
 
 import gameChallengeRouter from "./gameChallenge";
-import redis, { GAME_ID, USER_ID, userKey, gameKey } from "../services/redis";
+import redis, { gameKey } from "../services/redis";
 import userExtractor from "../middleware/userExtractor";
 import { getMessage, publishMessage } from "../services/subscribe";
 import { isGameFinished } from "../utils/game";
+import { GameState, BaseParams } from "../utils/types";
+import gameStateSchema from "../models/gameState";
 
 router.use(userExtractor);
-
 router.use(gameChallengeRouter);
 
 // play turn
@@ -44,10 +45,11 @@ router.post("/:gameId", async (req, res) => {
   const gameChannel = gameKey + ":wait";
   if (winner) {
     // announce that game has ended
+    // TODO: fix winner message
     await redis.hset(gameKey, "isOver", "true");
     await redis.publish(gameChannel, "winner," + winner);
   } else {
-    await redis.publish(gameChannel, playerPiece);
+    await publishMessage(gameChannel, { play: playerPiece });
     await getMessage(gameChannel);
   }
 
@@ -56,14 +58,16 @@ router.post("/:gameId", async (req, res) => {
 });
 
 // wait for first move
-router.get("/:gameId/wait", async (req, res) => {
-  const { gameId } = req.params;
-  const gameKey = `game:${gameId}`;
-  const gameChannel = `${gameKey}:wait`;
-  await getMessage(gameChannel);
+router.get<BaseParams, GameState>("/:id/wait", async (req, res) => {
+  const { id } = req.params;
+  const key = gameKey(id);
+  const channel = gameKey(id, true);
+  await getMessage(channel);
 
-  const game = await redis.hgetall(gameKey);
-  res.send({ game });
+  const redisGameState = await redis.hgetall(key);
+  const gameState = await gameStateSchema.validateAsync(redisGameState);
+
+  res.send(gameState);
 });
 
 export default router;
