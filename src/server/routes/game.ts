@@ -13,48 +13,55 @@ router.use(userExtractor);
 router.use(gameChallengeRouter);
 
 // play turn
-router.post("/:gameId", async (req, res) => {
-  const { gameId } = req.params;
+router.post<BaseParams, GameState>("/:id", async (req, res) => {
+  const gameId = req.params.id;
   const { id } = res.locals;
   const position = Number(req.body.position);
 
-  const gameKey = `game:${gameId}`;
-  const game = await redis.hgetall(gameKey);
+  // const gameKey = `game:${gameId}`;
+  const key = gameKey(gameId);
+  // const game = await redis.hgetall(gameKey);
+  const redisGameState = await redis.hgetall(key);
 
-  if (Object.keys(game).length === 0) throw new Error("invalidGameId");
-  if (game.isOver.toLowerCase() === "true") throw new Error("finishedGame");
+  if (Object.keys(gameStateSchema).length === 0)
+    throw new Error("invalidGameId");
+  const gameState = await gameStateSchema.validateAsync(redisGameState);
 
-  const { activePlayer } = game;
+  if (gameState.isOver) throw new Error("finishedGame");
 
-  if (Number(game[activePlayer]) !== id) throw new Error("notActivePlayer");
-  if (position in game) throw new Error("playedPosition");
+  const { activePlayer } = gameState;
+
+  if (gameState[activePlayer] !== id) throw new Error("notActivePlayer");
+  if (position in gameState) throw new Error("playedPosition");
   if (typeof position !== "number" || position < 0 || position > 8)
     throw new Error("invalidPosition");
 
   // update game state
-  const playerPiece = game[activePlayer + "Piece"];
+  const playerPiece = gameState[activePlayer + "Piece"];
   const newActivePlayer = activePlayer === "playerA" ? "playerB" : "playerA";
   await redis
     .pipeline()
-    .hincrby(gameKey, "move", 1)
-    .hmset(gameKey, position, playerPiece, "activePlayer", newActivePlayer)
+    .hincrby(key, "move", 1)
+    .hmset(key, position, playerPiece, "activePlayer", newActivePlayer)
     .exec();
 
-  game[position] = playerPiece;
-  const winner = isGameFinished(game);
-  const gameChannel = gameKey + ":wait";
+  gameState[position] = playerPiece;
+  const winner = isGameFinished(gameState);
+  // const gameChannel = gameKey + ":wait";
+  const gameChannel = gameKey(gameId, true);
   if (winner) {
     // announce that game has ended
     // TODO: fix winner message
-    await redis.hset(gameKey, "isOver", "true");
+    await redis.hset(key, "isOver", "true");
     await redis.publish(gameChannel, "winner," + winner);
   } else {
     await publishMessage(gameChannel, { play: playerPiece });
     await getMessage(gameChannel);
   }
 
-  const newGame = await redis.hgetall(gameKey);
-  res.send({ game: newGame });
+  const redisNewGame = await redis.hgetall(key);
+  const newGameState = await gameStateSchema.validateAsync(redisNewGame);
+  res.send(newGameState);
 });
 
 // wait for first move
