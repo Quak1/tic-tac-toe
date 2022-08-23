@@ -1,4 +1,4 @@
-import TempLogin from "./TempLogin/";
+import TempLogin from "./TempLogin";
 
 const Header = () => {
   return <TempLogin />;

@@ -12,7 +12,7 @@ export interface Props {
   validation?: Record<string, any>;
 }
 
-interface FormData {
+export interface FormData {
   field: string;
 }
 
