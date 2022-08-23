@@ -1,7 +1,7 @@
 import { Button, TextField, Box } from "@mui/material";
 import { useForm } from "react-hook-form";
 
-interface Props {
+export interface Props {
   onSubmit: (data: any) => void;
   labels: {
     label: string;
