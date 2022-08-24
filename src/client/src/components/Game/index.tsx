@@ -10,7 +10,7 @@ import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
 import Header from "./Header";
 import Footer from "./Footer";
-import GameEndDialog from "./GameEndDialog";
+import GameEndDialog from "../Dialogs/GameEndDialog";
 
 const styles = {
   maxWidth: "520px",
