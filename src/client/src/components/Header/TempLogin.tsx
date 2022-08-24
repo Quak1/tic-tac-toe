@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { Typography } from "@mui/material";
 
-import axios, { addAuthToken } from "../api/axios";
-import AuthContext from "../context/AuthProvider";
-import ToggleableSingleInputForm from "./Forms/ToggleableSingleInputForm";
-import { FormData } from "./Forms/SingleInputForm";
+import axios, { addAuthToken } from "../../api/axios";
+import AuthContext from "../../context/AuthProvider";
+import ToggleableSingleInputForm from "../Forms/ToggleableSingleInputForm";
+import { FormData } from "../Forms/SingleInputForm";
 
 interface LoginResponse {
   username: string;
