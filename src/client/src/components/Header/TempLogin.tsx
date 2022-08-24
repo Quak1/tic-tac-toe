@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { Typography } from "@mui/material";
 
 import axios, { addAuthToken } from "../../api/axios";
 import AuthContext from "../../context/AuthProvider";
@@ -24,9 +23,7 @@ const TempLogin = () => {
     authContext.setUser(res.data);
   };
 
-  return authContext.user ? (
-    <Typography>{`${authContext.user.username}#${authContext.user.id}`}</Typography>
-  ) : (
+  return (
     <ToggleableSingleInputForm
       onSubmit={loginUser}
       labels={{ label: "Username", button: "Login", showButton: "Login" }}
