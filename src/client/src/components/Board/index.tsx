@@ -21,6 +21,7 @@ interface Props {
   gameState: BoardType;
   winningPositions: GameFinishedType;
   onSquareClick: (i: number) => void;
+  tilesDisabled: boolean;
   resetBoard: () => void;
   activePlayer: Player;
   score: TotalScore;
@@ -30,6 +31,7 @@ const Board = ({
   gameState,
   winningPositions,
   onSquareClick,
+  tilesDisabled,
   resetBoard,
   activePlayer,
   score,
@@ -41,6 +43,7 @@ const Board = ({
         gameState={gameState}
         winningPositions={winningPositions}
         onSquareClick={onSquareClick}
+        tilesDisabled={tilesDisabled}
       />
       <Footer score={score} />
     </Box>

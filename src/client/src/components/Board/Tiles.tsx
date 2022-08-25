@@ -17,9 +17,15 @@ interface Props {
   gameState: BoardType;
   winningPositions: GameFinishedType;
   onSquareClick: (i: number) => void;
+  tilesDisabled: boolean;
 }
 
-const Tiles = ({ gameState, onSquareClick, winningPositions }: Props) => {
+const Tiles = ({
+  gameState,
+  onSquareClick,
+  winningPositions,
+  tilesDisabled,
+}: Props) => {
   let squares = [];
   for (let i = 0; i < 9; i++) {
     squares.push(
@@ -29,6 +35,7 @@ const Tiles = ({ gameState, onSquareClick, winningPositions }: Props) => {
         gameState={gameState}
         clickSquare={onSquareClick}
         gameFinished={winningPositions}
+        tilesDisabled={tilesDisabled}
       />
     );
   }

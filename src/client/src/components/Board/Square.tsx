@@ -42,10 +42,17 @@ interface Props {
   gameState: Board;
   clickSquare: (index: number) => void;
   gameFinished: GameFinishedType;
+  tilesDisabled: boolean;
 }
 
-const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
-  const enabled: boolean = !gameState[index];
+const Square = ({
+  index,
+  gameState,
+  clickSquare,
+  gameFinished,
+  tilesDisabled,
+}: Props) => {
+  const disabled: boolean = tilesDisabled || !!gameState[index];
 
   const handleClick = () => {
     clickSquare(index);
@@ -57,7 +64,7 @@ const Square = ({ index, gameState, clickSquare, gameFinished }: Props) => {
   } else if (gameState[index] === "o") {
     content = <Circle />;
   }
-  const onClick = enabled && !gameFinished ? handleClick : undefined;
+  const onClick = !disabled && !gameFinished ? handleClick : undefined;
 
   const winnerStyles =
     gameFinished && gameFinished.includes(index)

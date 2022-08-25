@@ -64,6 +64,7 @@ const Game = () => {
         resetBoard={resetBoard}
         activePlayer={activePlayer}
         score={score}
+        tilesDisabled={false}
       />
       <GameEndDialog
         open={openDialog}
