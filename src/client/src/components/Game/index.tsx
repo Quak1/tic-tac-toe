@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Box } from "@mui/material";
 
 import {
   Board as BoardType,
@@ -8,20 +7,12 @@ import {
 } from "../../utils/types";
 import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
-import Header from "./Header";
-import Footer from "./Footer";
 import GameEndDialog from "../Dialogs/GameEndDialog";
-
-const styles = {
-  maxWidth: "520px",
-  width: "100%",
-  padding: "0 10px",
-};
 
 const Game = () => {
   const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));
   const [activePlayer, setActivePlayer] = useState<Player>("x");
-  const [gameFinished, setGameFinished] = useState<GameFinishedType>();
+  const [winningPositions, setWinningPositions] = useState<GameFinishedType>();
   const [score, setScore] = useState({ x: 0, tie: 0, o: 0 });
   const [winner, setWinner] = useState<string>();
 
@@ -29,11 +20,11 @@ const Game = () => {
 
   const resetBoard = () => {
     setGameState(new Array(9).fill(""));
-    setGameFinished(undefined);
+    setWinningPositions(undefined);
     setActivePlayer("x");
   };
 
-  const clickSquare = (index: number) => {
+  const onSquareClick = (index: number) => {
     const newGameState = [...gameState];
     newGameState[index] = activePlayer;
     setGameState(newGameState);
@@ -54,7 +45,7 @@ const Game = () => {
     setScore(newScore);
     setWinner(winner);
 
-    setGameFinished(winnerSlots);
+    setWinningPositions(winnerSlots);
     setOpenDialog(true);
 
     return;
@@ -65,14 +56,15 @@ const Game = () => {
   };
 
   return (
-    <Box sx={styles}>
-      <Header resetBoard={resetBoard} activePlayer={activePlayer} />
+    <>
       <Board
         gameState={gameState}
-        gameFinished={gameFinished}
-        clickSquare={clickSquare}
+        winningPositions={winningPositions}
+        onSquareClick={onSquareClick}
+        resetBoard={resetBoard}
+        activePlayer={activePlayer}
+        score={score}
       />
-      <Footer score={score} />
       <GameEndDialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -80,7 +72,7 @@ const Game = () => {
         isWinner={true}
         resetBoard={resetBoard}
       />
-    </Box>
+    </>
   );
 };
 
