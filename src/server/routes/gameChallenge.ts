@@ -19,8 +19,8 @@ router.get<never, UserDetails>("/wait", async (_req, res) => {
   });
 });
 
-// challenge to match
-router.get<BaseParams, GameState>("/challenge/:id", async (req, res) => {
+// challenge player to match
+router.get<BaseParams, GameState>("/:id", async (req, res) => {
   const opponentId = req.params.id;
   const { username, id } = res.locals;
 
@@ -59,17 +59,17 @@ router.get<BaseParams, GameState>("/challenge/:id", async (req, res) => {
 });
 
 // answer to challenge
-router.get<never, GameState>("/challenge", async (req, res) => {
+router.post<never, GameState>("/answer", async (req, res) => {
   const { id } = res.locals;
   const { accept, opponentId } = req.body;
 
+  // TODO send denied answer
+  if (!accept) throw new Error("challengeDenied");
   if (!accept || !opponentId) throw new Error("invalidReqBody");
 
   // send answer
   const opponentChannel = userKey(opponentId, true);
   await publishMessage(opponentChannel, accept);
-
-  if (!accept) throw new Error("challengeDenied");
 
   // wait for game info
   const channel = userKey(id, true);

@@ -10,7 +10,7 @@ import { GameState, BaseParams } from "../utils/types";
 import gameStateSchema from "../models/gameState";
 
 router.use(userExtractor);
-router.use(gameChallengeRouter);
+router.use("/challenge", gameChallengeRouter);
 
 // play turn
 router.post<BaseParams, GameState>("/:id", async (req, res) => {
