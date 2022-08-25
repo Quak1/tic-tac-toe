@@ -1,5 +1,5 @@
 import { Box } from "@mui/system";
-import Game from "./Game/Local";
+import Game from "./Game/Online";
 
 const styles = {
   height: "100vh",
