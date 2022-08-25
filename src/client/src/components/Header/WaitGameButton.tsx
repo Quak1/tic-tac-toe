@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { LoadingButton } from "@mui/lab";
 import SportsKabaddiIcon from "@mui/icons-material/SportsKabaddi";
 
 import axios from "../../api/axios";
 import AnswerChallengeDialog from "../Dialogs/AnswerChallengeDialog";
 import { GameState, UserDetails } from "@backend/types";
+import GameContext from "../../context/GameStatusProvider";
 
 const WaitGameButton = () => {
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [opponent, setOpponent] = useState<UserDetails>();
+  const gameContext = useContext(GameContext);
 
   const answerMatch = async (accept: boolean) => {
     try {
@@ -17,6 +19,7 @@ const WaitGameButton = () => {
         opponentId: opponent?.id,
         accept,
       });
+      gameContext.setGameStatus(res.data);
       console.log(res.data);
     } catch (e) {
       // TODO notify fail to user
