@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
-import Square from "./Square";
 import Header from "./Header";
+import Tiles from "./Tiles";
 import Footer from "./Footer";
 
 import {
@@ -10,21 +10,11 @@ import {
   Player,
   TotalScore,
 } from "../../utils/types";
-import { gameGrid } from "../../utils/theme";
 
 const styles = {
-  board: {
-    ...gameGrid,
-    gridTemplateRows: "repeat(3, minmax(10px, 1fr))",
-    aspectRatio: "1 / 1",
-    marginTop: gameGrid.gap,
-    marginBottom: gameGrid.gap,
-  },
-  gameContainer: {
-    maxWidth: "520px",
-    width: "100%",
-    padding: "0 10px",
-  },
+  maxWidth: "520px",
+  width: "100%",
+  padding: "0 10px",
 };
 
 interface Props {
@@ -44,23 +34,14 @@ const Board = ({
   activePlayer,
   score,
 }: Props) => {
-  let squares = [];
-  for (let i = 0; i < 9; i++) {
-    squares.push(
-      <Square
-        key={i}
-        index={i}
-        gameState={gameState}
-        clickSquare={onSquareClick}
-        gameFinished={winningPositions}
-      />
-    );
-  }
-
   return (
-    <Box sx={styles.gameContainer}>
+    <Box sx={styles}>
       <Header resetBoard={resetBoard} activePlayer={activePlayer} />
-      <Box sx={styles.board}>{squares}</Box>
+      <Tiles
+        gameState={gameState}
+        winningPositions={winningPositions}
+        onSquareClick={onSquareClick}
+      />
       <Footer score={score} />
     </Box>
   );
