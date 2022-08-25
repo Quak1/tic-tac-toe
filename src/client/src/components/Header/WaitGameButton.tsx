@@ -19,11 +19,12 @@ const WaitGameButton = () => {
       });
       console.log(res.data);
     } catch (e) {
+      // TODO notify fail to user
+      // match is denied in server?
       console.log(e);
       alert("an error happened!");
-    } finally {
-      setOpenDialog(false);
     }
+    setOpenDialog(false);
   };
 
   const onDialogClose = (_event?: object, reason?: string) => {
@@ -34,15 +35,18 @@ const WaitGameButton = () => {
   };
 
   const waitForGame = async () => {
-    setLoading(true);
-    const res = await axios.get<UserDetails>("/game/challenge/wait");
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await axios.get<UserDetails>("/game/challenge/wait");
 
-    if (res.data) {
       setOpponent(res.data);
       setOpenDialog(true);
+      console.log(res);
+    } catch (e) {
+      // TODO notify fail to user
+      console.log(e);
     }
-    console.log(res);
+    setLoading(false);
   };
 
   return (

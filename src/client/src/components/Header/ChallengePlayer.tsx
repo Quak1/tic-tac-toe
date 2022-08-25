@@ -4,8 +4,13 @@ import axios from "../../api/axios";
 
 const ChallengePlayerForm = () => {
   const challengePlayer = async (data: FormData) => {
-    const res = await axios.get(`/game/challenge/${data.field}`);
-    console.log(res);
+    try {
+      const res = await axios.get(`/game/challenge/${data.field}`);
+      console.log(res);
+    } catch (e) {
+      // TODO notify user
+      console.log(e);
+    }
   };
 
   // TODO don't show play online form if
