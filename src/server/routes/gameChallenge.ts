@@ -5,6 +5,7 @@ import redis, { GAME_ID, userKey, gameKey } from "../services/redis";
 import { getMessage, publishMessage } from "../services/subscribe";
 import { GAME_TTL } from "../config";
 import { UserDetails, BaseParams, GameState, Piece } from "../utils/types";
+import gameStateSchema from "../models/gameState";
 
 // wait for match
 router.get<never, UserDetails>("/wait", async (_req, res) => {
@@ -75,17 +76,7 @@ router.post<never, GameState>("/answer", async (req, res) => {
   const gameId = await getMessage<{ gameId: string }>(channel);
   const gameInfo = await redis.hgetall(gameKey(gameId.gameId));
 
-  // TODO actually parse JSON
-  const game: GameState = {
-    id: Number(gameInfo.id),
-    playerA: Number(gameInfo.playerA),
-    playerB: Number(gameInfo.playerB),
-    playerAPiece: gameInfo.playerAPiece as Piece,
-    playerBPiece: gameInfo.playerBPiece as Piece,
-    activePlayer: gameInfo.activePlayer as "playerA" | "playerB",
-    move: Number(gameInfo.move),
-    isOver: JSON.parse(gameInfo.isOver),
-  };
+  const game = await gameStateSchema.validateAsync(gameInfo);
 
   res.send(game);
 });
