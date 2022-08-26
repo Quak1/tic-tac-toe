@@ -13,7 +13,10 @@ const ChallengePlayerForm = () => {
       const opponent = data.field.replace("#", "-");
       const res = await axios.get(`/game/challenge/${opponent}`);
       console.log(res);
-      gameContext.setGameStatus(res.data);
+
+      // notify user that challenge was denied
+      if (!res.data.id) console.log("challenge was denied");
+      else gameContext.setGameStatus(res.data);
     } catch (e) {
       // TODO notify user
       console.log(e);

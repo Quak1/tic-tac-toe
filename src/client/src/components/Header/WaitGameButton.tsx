@@ -19,8 +19,9 @@ const WaitGameButton = () => {
         opponentId: opponent?.id,
         accept,
       });
-      gameContext.setGameStatus(res.data);
       console.log(res.data);
+
+      if (res.data.id) gameContext.setGameStatus(res.data);
     } catch (e) {
       // TODO notify fail to user
       // match is denied in server?

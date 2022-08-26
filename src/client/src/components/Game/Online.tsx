@@ -39,12 +39,6 @@ const Game = () => {
     setActivePlayer(gameStatus[`${activePlayerTag}Piece`]);
     setUserPiece(getUserPiece(authContext.user!, gameStatus));
 
-    if (authContext.user?.id === gameStatus[activePlayerTag]) {
-      setTilesDisabled(false);
-    } else {
-      waitForMove(gameStatus.id);
-    }
-
     if (gameStatus.isOver) {
       const winner = checkWinner(parsedGame);
       if (winner) {
@@ -69,6 +63,12 @@ const Game = () => {
         });
       }
       setOpenDialog(true);
+    }
+
+    if (authContext.user?.id === gameStatus[activePlayerTag]) {
+      setTilesDisabled(false);
+    } else {
+      waitForMove(gameStatus.id);
     }
   }, [gameStatus]);
 
