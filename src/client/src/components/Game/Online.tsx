@@ -26,6 +26,7 @@ const Game = () => {
   const [winner, setWinner] = useState<string>();
   const [tilesDisabled, setTilesDisabled] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
+  const [isUserWinner, setIsUserWinner] = useState(false);
 
   const gameStatus = gameContext.gameStatus;
   useEffect(() => {
@@ -48,9 +49,13 @@ const Game = () => {
       const winner = checkWinner(parsedGame);
       if (winner) {
         setWinningPositions(winner);
+
         const winnerPiece = parsedGame[winner[0]];
         if (winnerPiece === "") return;
+        if (winnerPiece === userPiece) setIsUserWinner(true);
+        else setIsUserWinner(false);
         setWinner(winnerPiece);
+
         setScore({
           ...score,
           [winnerPiece]: score[winnerPiece] + 1,
@@ -113,7 +118,7 @@ const Game = () => {
         open={openDialog}
         onClose={handleCloseDialog}
         winner={winner}
-        isWinner={true}
+        isWinner={isUserWinner}
         resetBoard={resetBoard}
       />
     </>
