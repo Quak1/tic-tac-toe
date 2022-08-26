@@ -22,8 +22,13 @@ router.get<never, UserDetails>("/wait", async (_req, res) => {
 
 // challenge player to match
 router.get<BaseParams, GameState>("/:id", async (req, res) => {
-  const opponentId = req.params.id;
+  const opponent = req.params.id;
   const { username, id } = res.locals;
+
+  const [opponentUsername, opponentId] = opponent.split("-");
+  // verify that opponent exists
+  const opponentData = await redis.get(userKey(opponentId));
+  if (opponentUsername !== opponentData) throw new Error("invalidUser");
 
   // send challenge
   const opponentChannel = userKey(opponentId, true);
