@@ -10,7 +10,8 @@ const ChallengePlayerForm = () => {
 
   const challengePlayer = async (data: FormData) => {
     try {
-      const res = await axios.get(`/game/challenge/${data.field}`);
+      const opponent = data.field.replace("#", "-");
+      const res = await axios.get(`/game/challenge/${opponent}`);
       console.log(res);
       gameContext.setGameStatus(res.data);
     } catch (e) {
