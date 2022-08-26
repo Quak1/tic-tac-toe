@@ -63,13 +63,12 @@ router.post<never, GameState>("/answer", async (req, res) => {
   const { id } = res.locals;
   const { accept, opponentId } = req.body;
 
-  // TODO send denied answer
-  if (!accept) throw new Error("challengeDenied");
-  if (!accept || !opponentId) throw new Error("invalidReqBody");
+  if (!opponentId) throw new Error("invalidReqBody");
 
   // send answer
   const opponentChannel = userKey(opponentId, true);
   await publishMessage(opponentChannel, accept);
+  if (!accept) throw new Error("challengeDenied");
 
   // wait for game info
   const channel = userKey(id, true);
