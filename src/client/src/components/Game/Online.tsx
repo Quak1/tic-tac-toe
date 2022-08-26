@@ -1,27 +1,71 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import {
   Board as BoardType,
   Player,
   GameFinishedType,
 } from "../../utils/types";
-import { checkWinner, isFullBoard } from "../../utils/game";
 import Board from "../Board";
 import GameEndDialog from "../Dialogs/GameEndDialog";
 import GameContext from "../../context/GameStatusProvider";
+import AuthContext from "context/AuthProvider";
+import { GameState } from "@backend/types";
+import { parseGameState, checkWinner, getUserPiece } from "../../utils/game";
+import axios from "../../api/axios";
 
 const Game = () => {
-  const [gameState, setGameState] = useState<BoardType>(new Array(9).fill(""));
+  const gameContext = useContext(GameContext);
+  const authContext = useContext(AuthContext);
+  const [boardState, setBoardState] = useState<BoardType>(
+    new Array(9).fill("")
+  );
+  const [userPiece, setUserPiece] = useState<Player>();
   const [activePlayer, setActivePlayer] = useState<Player>("x");
   const [winningPositions, setWinningPositions] = useState<GameFinishedType>();
   const [score, setScore] = useState({ x: 0, tie: 0, o: 0 });
   const [winner, setWinner] = useState<string>();
   const [tilesDisabled, setTilesDisabled] = useState(true);
-  const gameContext = useContext(GameContext);
-
-  if (gameContext.gameStatus)
-    console.log("gameContext", gameContext.gameStatus);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const gameStatus = gameContext.gameStatus;
+  useEffect(() => {
+    if (!gameStatus) return;
+
+    const parsedGame = parseGameState(gameStatus);
+    setBoardState(parsedGame);
+
+    const activePlayerTag = gameStatus.activePlayer;
+    setActivePlayer(gameStatus[`${activePlayerTag}Piece`]);
+    setUserPiece(getUserPiece(authContext.user!, gameStatus));
+
+    if (authContext.user?.id === gameStatus[activePlayerTag]) {
+      setTilesDisabled(false);
+    } else {
+      waitForMove(gameStatus.id);
+    }
+
+    if (gameStatus.isOver) {
+      const winner = checkWinner(parsedGame);
+      if (winner) {
+        setWinningPositions(winner);
+        const winnerPiece = parsedGame[winner[0]];
+        if (winnerPiece === "") return;
+        setWinner(winnerPiece);
+        setScore({
+          ...score,
+          [winnerPiece]: score[winnerPiece] + 1,
+        });
+      } else {
+        setWinningPositions(undefined);
+        setWinner("tie");
+        setScore({
+          ...score,
+          tie: score["tie"] + 1,
+        });
+      }
+      setOpenDialog(true);
+    }
+  }, [gameStatus]);
 
   const resetBoard = () => {
     // TODO handle board reset
@@ -30,10 +74,23 @@ const Game = () => {
   };
 
   const onSquareClick = (index: number) => {
-    // update local board state
-    // send requeset to server
-    // update local state with new movement
+    if (!gameStatus) return;
+    const newGameStatus = { ...gameStatus };
+    newGameStatus[index] = activePlayer;
+    sendMove(index);
     console.log("square click");
+  };
+
+  const sendMove = async (position: number) => {
+    setTilesDisabled(true);
+    const gameId = gameStatus?.id;
+    const res = await axios.post<GameState>(`/game/${gameId}`, { position });
+    gameContext.setGameStatus(res.data);
+  };
+
+  const waitForMove = async (gameId: number) => {
+    const res = await axios.get<GameState>(`/game/${gameId}/wait`);
+    gameContext.setGameStatus(res.data);
   };
 
   const handleCloseDialog = () => {
@@ -43,11 +100,12 @@ const Game = () => {
   return (
     <>
       <Board
-        gameState={gameState}
+        gameState={boardState}
         winningPositions={winningPositions}
         onSquareClick={onSquareClick}
         resetBoard={resetBoard}
         activePlayer={activePlayer}
+        userPiece={userPiece}
         score={score}
         tilesDisabled={tilesDisabled}
       />
