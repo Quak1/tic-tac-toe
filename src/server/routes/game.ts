@@ -52,10 +52,6 @@ router.post<BaseParams, GameState>("/:id", async (req, res) => {
     await publishMessage(gameChannel, { winner });
   } else {
     await publishMessage(gameChannel, { play: playerPiece });
-    let message;
-    do {
-      message = await getMessage<Record<string, string>>(gameChannel);
-    } while (message.play === playerPiece);
   }
 
   const redisNewGame = await redis.hgetall(key);
@@ -63,11 +59,17 @@ router.post<BaseParams, GameState>("/:id", async (req, res) => {
   res.send(newGameState);
 });
 
-// wait for first move
+// wait for play
 router.get<BaseParams, GameState>("/:id/wait", async (req, res) => {
   const { id } = req.params;
+
   const key = gameKey(id);
   const channel = gameKey(id, true);
+
+  const gameOver = await redis.hget(key, "isOver");
+  console.log(gameOver);
+  if (gameOver === "true") throw new Error("finishedGame");
+
   await getMessage(channel);
 
   const redisGameState = await redis.hgetall(key);

@@ -20,7 +20,7 @@ interface MessageListener {
 }
 
 const waitForMessage = (key: string) => {
-  return new Promise<MessageListener>((resolve) => {
+  return new Promise<MessageListener>((resolve, reject) => {
     const _listener = (channel: string, message: string) => {
       if (key === channel) {
         resolve({ message, _listener });
@@ -28,6 +28,8 @@ const waitForMessage = (key: string) => {
       }
     };
     redisSub.on("message", _listener);
+
+    setTimeout(() => reject({ _listener }), 60000);
   });
 };
 
