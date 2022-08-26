@@ -24,6 +24,7 @@ interface Props {
   tilesDisabled: boolean;
   resetBoard: () => void;
   activePlayer: Player;
+  userPiece?: Player;
   score: TotalScore;
 }
 
@@ -34,11 +35,16 @@ const Board = ({
   tilesDisabled,
   resetBoard,
   activePlayer,
+  userPiece,
   score,
 }: Props) => {
   return (
     <Box sx={styles}>
-      <Header resetBoard={resetBoard} activePlayer={activePlayer} />
+      <Header
+        resetBoard={resetBoard}
+        activePlayer={activePlayer}
+        userPiece={userPiece}
+      />
       <Tiles
         gameState={gameState}
         winningPositions={winningPositions}

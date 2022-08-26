@@ -52,15 +52,16 @@ const styles = {
 interface Props {
   resetBoard: () => void;
   activePlayer: Player;
+  userPiece?: Player;
 }
 
-const Header = ({ resetBoard, activePlayer }: Props) => {
+const Header = ({ resetBoard, activePlayer, userPiece }: Props) => {
   const playerIcon = activePlayer === "x" ? <Cross /> : <Circle />;
   return (
     <Box sx={styles.container}>
       <Box sx={styles.iconsContainer}>
-        <Cross />
-        <Circle />
+        <Cross gray={userPiece && userPiece !== "x"} />
+        <Circle gray={userPiece && userPiece !== "o"} />
       </Box>
       <Typography sx={styles.playerLabel}>{playerIcon} TURN</Typography>
       <IconButton onClick={resetBoard} sx={styles.resetButton}>
