@@ -74,6 +74,7 @@ const Game = () => {
     } else {
       waitForMove(gameStatus.id);
     }
+    // eslint-disable-next-line
   }, [gameStatus]);
 
   const resetBoard = () => {
