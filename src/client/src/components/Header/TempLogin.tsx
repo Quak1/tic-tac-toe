@@ -16,16 +16,16 @@ const TempLogin = () => {
 
   const loginUser = async (data: FormData) => {
     try {
-    const res = await axios.post<LoginResponse>("/login", {
-      username: data.field,
-    });
+      const res = await axios.post<LoginResponse>("/login", {
+        username: data.field,
+      });
 
-    addAuthToken(res.data.token);
-    authContext.setUser(res.data);
+      addAuthToken(res.data.token);
+      authContext.setUser(res.data);
     } catch (e) {
       // TODO notify user
-      console.log(e)
-      }
+      console.log(e);
+    }
   };
 
   return (
