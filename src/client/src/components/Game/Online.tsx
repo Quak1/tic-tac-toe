@@ -30,7 +30,11 @@ const Game = () => {
 
   const gameStatus = gameContext.gameStatus;
   useEffect(() => {
-    if (!gameStatus) return;
+    if (!gameStatus) {
+      setBoardState(new Array(9).fill(""));
+      setWinningPositions(undefined);
+      return;
+    }
 
     const parsedGame = parseGameState(gameStatus);
     setBoardState(parsedGame);
@@ -76,6 +80,7 @@ const Game = () => {
     // TODO handle board reset
     // rematch? always at end of the game?
     console.log("reset Board");
+    gameContext.setGameStatus(undefined!);
   };
 
   const onSquareClick = (index: number) => {
