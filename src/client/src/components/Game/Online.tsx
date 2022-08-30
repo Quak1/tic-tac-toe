@@ -30,7 +30,11 @@ const Game = () => {
 
   const gameStatus = gameContext.gameStatus;
   useEffect(() => {
-    if (!gameStatus) return;
+    if (!gameStatus) {
+      setBoardState(new Array(9).fill(""));
+      setWinningPositions(undefined);
+      return;
+    }
 
     const parsedGame = parseGameState(gameStatus);
     setBoardState(parsedGame);
@@ -38,12 +42,6 @@ const Game = () => {
     const activePlayerTag = gameStatus.activePlayer;
     setActivePlayer(gameStatus[`${activePlayerTag}Piece`]);
     setUserPiece(getUserPiece(authContext.user!, gameStatus));
-
-    if (authContext.user?.id === gameStatus[activePlayerTag]) {
-      setTilesDisabled(false);
-    } else {
-      waitForMove(gameStatus.id);
-    }
 
     if (gameStatus.isOver) {
       const winner = checkWinner(parsedGame);
@@ -70,12 +68,19 @@ const Game = () => {
       }
       setOpenDialog(true);
     }
+
+    if (authContext.user?.id === gameStatus[activePlayerTag]) {
+      setTilesDisabled(false);
+    } else {
+      waitForMove(gameStatus.id);
+    }
   }, [gameStatus]);
 
   const resetBoard = () => {
     // TODO handle board reset
     // rematch? always at end of the game?
     console.log("reset Board");
+    gameContext.setGameStatus(undefined!);
   };
 
   const onSquareClick = (index: number) => {

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Typography } from "@mui/material";
 
 import TempLoginForm from "./TempLogin";
-import ChallengePlayerForm from "./ChallengePlayer";
+import ChallengePlayer from "./ChallengePlayer";
 import AuthContext from "../../context/AuthProvider";
 import WaitGameButton from "./WaitGameButton";
 
@@ -12,7 +12,7 @@ const Header = () => {
   return authContext.user ? (
     <>
       <Typography>{`${authContext.user.username}#${authContext.user.id}`}</Typography>
-      <ChallengePlayerForm />
+      <ChallengePlayer />
       <WaitGameButton />
     </>
   ) : (

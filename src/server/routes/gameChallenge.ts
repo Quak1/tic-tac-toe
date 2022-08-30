@@ -5,6 +5,7 @@ import redis, { GAME_ID, userKey, gameKey } from "../services/redis";
 import { getMessage, publishMessage } from "../services/subscribe";
 import { GAME_TTL } from "../config";
 import { UserDetails, BaseParams, GameState, Piece } from "../utils/types";
+import gameStateSchema from "../models/gameState";
 
 // wait for match
 router.get<never, UserDetails>("/wait", async (_req, res) => {
@@ -21,8 +22,13 @@ router.get<never, UserDetails>("/wait", async (_req, res) => {
 
 // challenge player to match
 router.get<BaseParams, GameState>("/:id", async (req, res) => {
-  const opponentId = req.params.id;
+  const opponent = req.params.id;
   const { username, id } = res.locals;
+
+  const [opponentUsername, opponentId] = opponent.split("-");
+  // verify that opponent exists
+  const opponentData = await redis.get(userKey(opponentId));
+  if (opponentUsername !== opponentData) throw new Error("invalidUser");
 
   // send challenge
   const opponentChannel = userKey(opponentId, true);
@@ -75,17 +81,7 @@ router.post<never, GameState>("/answer", async (req, res) => {
   const gameId = await getMessage<{ gameId: string }>(channel);
   const gameInfo = await redis.hgetall(gameKey(gameId.gameId));
 
-  // TODO actually parse JSON
-  const game: GameState = {
-    id: Number(gameInfo.id),
-    playerA: Number(gameInfo.playerA),
-    playerB: Number(gameInfo.playerB),
-    playerAPiece: gameInfo.playerAPiece as Piece,
-    playerBPiece: gameInfo.playerBPiece as Piece,
-    activePlayer: gameInfo.activePlayer as "playerA" | "playerB",
-    move: Number(gameInfo.move),
-    isOver: JSON.parse(gameInfo.isOver),
-  };
+  const game = await gameStateSchema.validateAsync(gameInfo);
 
   res.send(game);
 });
